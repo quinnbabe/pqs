@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+	<project name="Draw Panel">
+
+	<description>
+			This is a multi-window canvas app where users can paint on a canvas using the mouse.
+		</description>
+
+		<property name="src" location="src" />
+		<property name="testsrc" location="testsrc" />
+		<property name="lib" location="lib" />
+		<property name="build" location="build" />
+		<property name="Jarfile" location="Jarfile" />
+
+		<path id="complie-test-path">
+			<fileset dir="${lib}">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+
+		<target name="compile">
+			<tstamp />
+			<mkdir dir="${build}" />
+			<javac srcdir="${src}" destdir="${build}" debug="on" />
+			<javac srcdir="${testsrc}" destdir="${build}" debug="on" classpathref="complie-test-path" />
+		</target>
+
+		<target name="Jarfile" depends="compile">
+			<mkdir dir="${Jarfile}" />
+			<jar destfile="${Jarfile}/drawpanel-src-${DSTAMP}.jar" basedir="${src}" />
+		</target>
+
+		<path id="run-test-path">
+			<path refid="complie-test-path"/>
+			<pathelement location="${build}"/>
+		</path>
+		
+		<target name="runtest">
+			<junit printsummary="yes" haltonerror="true" haltonfailure="true">
+				<classpath refid="run-test-path"/>
+				<batchtest fork="yes">
+					<fileset dir="${testsrc}">
+						<include name="**/*Test*.java"/>
+					</fileset>
+				</batchtest>
+			</junit>
+		</target>
+
+		<target name="clean" description="clean up">
+			<delete dir="${build}" />
+			<delete dir="${Jarfile}" />
+		</target>
+
+	</project>
